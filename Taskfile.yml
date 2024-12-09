@@ -17,21 +17,22 @@ tasks:
 
   build:
     cmds:
-      - task: gen-orm
+      - task: gen-models
       - go build .
 
-  gen-orm:
+  gen-models:
     cmds:
       - sqlboiler psql -c sqlboiler.toml
 
-  # usage: NAME=create_sample_table task migrate-create
-  migrate-create:
+  # usage: NAME=create_sample_table task migration-create
+  migration-create:
     cmds:
       - migrate create -ext sql -dir {{.MIGRATIONS_PATH}} -seq $NAME
 
   migrate-up:
     cmds:
       - migrate -path '{{.MIGRATIONS_PATH}}' -database $DB_CONNECTION -verbose up
+      - task: gen-models
 
   migrate-drop:
     cmds:
