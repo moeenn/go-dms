@@ -5,16 +5,39 @@ import (
 	"os"
 )
 
+var (
+	ErrEnvDBConnectionNotSet = errors.New("env variable not set: DB_CONNECTION")
+)
+
+type Config struct {
+	Database *DatabaseConfig
+}
+
+func NewConfig() (*Config, error) {
+	dbConfig, err := NewDatabaseConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	c := &Config{
+		Database: dbConfig,
+	}
+
+	return c, nil
+}
+
 type DatabaseConfig struct {
 	ConnectionURI string
 }
 
 func NewDatabaseConfig() (*DatabaseConfig, error) {
-	c := &DatabaseConfig{}
+	uri := os.Getenv("DB_CONNECTION")
+	if uri == "" {
+		return nil, ErrEnvDBConnectionNotSet
+	}
 
-	c.ConnectionURI = os.Getenv("DB_CONNECTION")
-	if c.ConnectionURI == "" {
-		return c, errors.New("env variable not set: DB_CONNECTION")
+	c := &DatabaseConfig{
+		ConnectionURI: uri,
 	}
 
 	return c, nil

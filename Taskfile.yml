@@ -18,7 +18,17 @@ tasks:
   build:
     cmds:
       - task: gen-models
+      - task: lint
+      - task: test
       - go build .
+
+  lint:
+    cmds:
+      - golangci-lint run ./...
+
+  test:
+    cmds:
+      - godotenv -f {{.ENV}} go test -v ./...
 
   gen-models:
     cmds:

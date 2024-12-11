@@ -2,3 +2,11 @@ linters:
   enable:
     - exhaustive
     - exhaustruct
+    - gosec
+    - nilnil
+    - nilerr
+    - contextcheck
+    - err113
+    - gochecknoinits
+    - godot
+    - godox

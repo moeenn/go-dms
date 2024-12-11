@@ -1,10 +1,8 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"dms/config"
-	"dms/modules/users"
 	"fmt"
 	"os"
 
@@ -12,26 +10,14 @@ import (
 )
 
 func run() error {
-	dbConfig, err := config.NewDatabaseConfig()
+	cfg, err := config.NewConfig()
 	if err != nil {
 		return err
 	}
 
-	db, err := sql.Open("postgres", dbConfig.ConnectionURI)
+	_, err = sql.Open("postgres", cfg.Database.ConnectionURI)
 	if err != nil {
 		return err
-	}
-
-	ctx := context.Background()
-	userRepo := users.NewUserRepository(db)
-
-	allUsers, err := userRepo.ListAll(ctx)
-	if err != nil {
-		return err
-	}
-
-	for _, user := range allUsers {
-		fmt.Printf("%v\n", user)
 	}
 
 	return nil
